@@ -1,10 +1,15 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
+# from phonenumber_field.phonenumber import PhoneNumber
+from phonenumber_field.modelfields import PhoneNumberField
+
 
 
 class Flat(models.Model):
     owner = models.CharField('ФИО владельца', max_length=200)
-    owners_phonenumber = models.CharField('Номер владельца', max_length=20)
+    owner_pure_phone = models.CharField('Номер владельца', max_length=20)
+    owners_phonenumber = PhoneNumberField(region='RU', blank=True, null=True)
     created_at = models.DateTimeField(
         'Когда создано объявление',
         default=timezone.now,
@@ -39,7 +44,7 @@ class Flat(models.Model):
         blank=True,
         db_index=True)
 
-    has_balcony = models.NullBooleanField('Наличие балкона', db_index=True)
+    has_balcony = models.BooleanField('Наличие балкона', db_index=True)
     active = models.BooleanField('Активно-ли объявление', db_index=True)
     new_building = models.BooleanField('Новостройка', null=True)
     construction_year = models.IntegerField(
@@ -47,6 +52,15 @@ class Flat(models.Model):
         null=True,
         blank=True,
         db_index=True)
+    liked_by = models.ManyToManyField(User, related_name="liked_posts", blank=True)
 
     def __str__(self):
         return f'{self.town}, {self.address} ({self.price}р.)'
+
+
+class Сomplaint(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь подавший жалобу')
+    complaint_flat = models.ForeignKey(Flat, on_delete=models.CASCADE, verbose_name='жалоба на квартиру', null=True)
+    text = models.TextField(help_text="Текст жалобы")
+    def __str__(self):
+        return f"{self.text}"

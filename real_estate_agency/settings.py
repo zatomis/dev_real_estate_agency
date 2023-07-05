@@ -1,6 +1,6 @@
 import dj_database_url
 import os
-
+from phonenumber_field.phonenumber import PhoneNumber
 from environs import Env
 
 env = Env()
@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
 
     'property.apps.PropertyConfig',
+    'phonenumber_field',
 ]
 
 MIDDLEWARE = [
@@ -90,6 +91,8 @@ USE_I18N = True
 
 USE_THOUSAND_SEPARATOR = True
 THOUSAND_SEPARATOR = '&nbsp;'
+
+PHONENUMBER_DEFAULT_REGION = 'RU'
 
 USE_TZ = True
 
