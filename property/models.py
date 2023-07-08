@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-# from phonenumber_field.phonenumber import PhoneNumber
 from phonenumber_field.modelfields import PhoneNumberField
 
 
@@ -9,7 +8,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 class Flat(models.Model):
     owner = models.CharField('ФИО владельца', max_length=200)
     owner_pure_phone = models.CharField('Номер владельца', max_length=20)
-    owners_phonenumber = PhoneNumberField(region='RU', blank=True, null=True)
+    owners_phonenumber = PhoneNumberField('Номер нормализированный владельца', region='RU', blank=True, null=True)
     created_at = models.DateTimeField(
         'Когда создано объявление',
         default=timezone.now,
@@ -64,3 +63,12 @@ class Сomplaint(models.Model):
     text = models.TextField(help_text="Текст жалобы")
     def __str__(self):
         return f"{self.text}"
+
+class Owner(models.Model):
+    owner = models.CharField('ФИО владельца', max_length=200)
+    owner_pure_phone = models.CharField('Номер владельца', max_length=20)
+    owners_phonenumber = PhoneNumberField('Номер нормализированный владельца', region='RU', blank=True, null=True)
+    owner_flat = models.ManyToManyField(Flat, related_name="user_flats", blank=True, help_text='Квартиры в собственности')
+
+    def __str__(self):
+        return f"{self.owner}"
