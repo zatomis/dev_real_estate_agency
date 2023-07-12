@@ -9,13 +9,13 @@ class MembershipInline(admin.TabularInline):
 class FlatSettings(admin.ModelAdmin):
     search_fields = ['town', 'address', 'owner', ]
     readonly_fields = ["created_at"]
-    list_display = ['address', 'owners_phonenumber', 'price', 'new_building', 'construction_year', 'town', ]
+    list_display = ['address', 'price', 'new_building', 'construction_year', 'town', ]
     list_editable = ['new_building',]
     list_filter = ['new_building', 'price']
 
 
 class СomplaintSettings(admin.ModelAdmin):
-    raw_id_fields = ['complaint_flat']
+    raw_id_fields = ['complaint']
 
 class OwnerFlatSettings(admin.ModelAdmin):
     raw_id_fields = ['owner_flat']

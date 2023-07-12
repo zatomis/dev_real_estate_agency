@@ -7,8 +7,6 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 class Flat(models.Model):
     owner = models.CharField('ФИО владельца', max_length=200)
-    owner_pure_phone = models.CharField('Номер владельца', max_length=20)
-    owners_phonenumber = PhoneNumberField('Номер нормализированный владельца', region='RU', blank=True, null=True)
     created_at = models.DateTimeField(
         'Когда создано объявление',
         default=timezone.now,
@@ -51,24 +49,24 @@ class Flat(models.Model):
         null=True,
         blank=True,
         db_index=True)
-    liked_by = models.ManyToManyField(User, related_name="liked_posts", blank=True)
+    liked_by = models.ManyToManyField(User, related_name="like", verbose_name='лайк', blank=True)
 
     def __str__(self):
         return f'{self.town}, {self.address} ({self.price}р.)'
 
 
 class Сomplaint(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь подавший жалобу')
-    complaint_flat = models.ForeignKey(Flat, on_delete=models.CASCADE, verbose_name='жалоба на квартиру', null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="complaining_user", verbose_name='пользователь подавший жалобу')
+    complaint = models.ForeignKey(Flat, related_name="apartment_complaint", on_delete=models.CASCADE, verbose_name='жалоба на квартиру', null=True)
     text = models.TextField(help_text="Текст жалобы")
     def __str__(self):
-        return f"{self.text}"
+        return self.text
 
 class Owner(models.Model):
     owner = models.CharField('ФИО владельца', max_length=200)
-    owner_pure_phone = models.CharField('Номер владельца', max_length=20)
-    owners_phonenumber = PhoneNumberField('Номер нормализированный владельца', region='RU', blank=True, null=True)
+    owner_phone = models.CharField('Номер владельца', max_length=20)
+    owner_phonenumber = PhoneNumberField('Номер владельца (нормализированный)', region='RU', blank=True, null=True)
     owner_flat = models.ManyToManyField(Flat, related_name="user_flats", blank=True, help_text='Квартиры в собственности')
 
     def __str__(self):
-        return f"{self.owner}"
+        return self.owner
