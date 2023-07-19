@@ -10,10 +10,11 @@ def del_owners(apps, schema_editor):
 def add_owners(apps, schema_editor):
     Flats = apps.get_model('property', 'Flat')
     Owners = apps.get_model('property', 'Owner')
-    for flat in Flats.objects.all():
-        owner_id = Owners.objects.get_or_create(owner=flat.owner, owner_pure_phone=flat.owner_pure_phone, owners_phonenumber=flat.owners_phonenumber)[0]
-        owner_id.owner_flat.add(Flats.objects.get(id=flat.id))
-        #owner_id.owner_flat.add(Flats.objects.get(pk=this_object_id))
+    flat_set = Flats.objects.all()
+    if flat_set.exists():
+        for flat in flat_set.iterator():
+            owner_id = Owners.objects.get_or_create(owner=flat.owner, owner_pure_phone=flat.owner_pure_phone, owners_phonenumber=flat.owners_phonenumber)[0]
+            owner_id.owner_flat.add(Flats.objects.get(id=flat.id))
 
 
 class Migration(migrations.Migration):
