@@ -55,8 +55,8 @@ class Flat(models.Model):
 
 
 class Сomplaint(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="complaining", verbose_name='пользователь подавший жалобу')
-    complaint = models.ForeignKey(Flat, related_name="apartment", on_delete=models.CASCADE, verbose_name='жалоба на квартиру', null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="complaints", verbose_name='пользователь подавший жалобу')
+    flat = models.ForeignKey(Flat, related_name="complaints", on_delete=models.CASCADE, verbose_name='жалоба на квартиру', null=True)
     text = models.TextField(help_text="Текст жалобы")
     def __str__(self):
         return self.text
@@ -65,7 +65,7 @@ class Owner(models.Model):
     full_name = models.CharField('ФИО владельца', max_length=200)
     phone = models.CharField('Номер владельца', max_length=20)
     phonenumber = PhoneNumberField('Номер владельца (нормализированный)', region='RU', blank=True, null=True)
-    flat = models.ManyToManyField(Flat, related_name="user_flats", blank=True, help_text='Квартиры в собственности')
+    flats = models.ManyToManyField(Flat, related_name="owners", blank=True, help_text='Квартиры в собственности')
 
     def __str__(self):
         return self.full_name

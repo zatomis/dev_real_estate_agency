@@ -3,7 +3,7 @@ from .models import Flat, Сomplaint, Owner
 
 
 class MembershipInline(admin.TabularInline):
-    model = Owner.flat.through
+    model = Owner.flats.through
 
 
 class FlatSettings(admin.ModelAdmin):
@@ -15,10 +15,10 @@ class FlatSettings(admin.ModelAdmin):
 
 
 class СomplaintSettings(admin.ModelAdmin):
-    raw_id_fields = ['complaint']
+    raw_id_fields = ['flat']
 
 class OwnerFlatSettings(admin.ModelAdmin):
-    raw_id_fields = ['flat']
+    raw_id_fields = ['flats']
     inlines = [
         MembershipInline,
     ]

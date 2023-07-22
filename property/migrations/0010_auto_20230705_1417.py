@@ -4,10 +4,10 @@ from django.db import migrations
 import phonenumbers
 
 def correct_phone_number(apps, schema_editor):
-    Flats = apps.get_model('property', 'Flat')
-    flat_set = Flats.objects.all()
-    if flat_set.exists():
-        for flat in flat_set.iterator():
+    Flat = apps.get_model('property', 'Flat')
+    flats = Flat.objects.all()
+    if flats.exists():
+        for flat in flats.iterator():
             get_country_code = phonenumbers.parse(flat.owner_pure_phone).country_code
             valid_phone_number = str(phonenumbers.parse(flat.owner_pure_phone, 'RU')).split(' ')[5]
             if valid_phone_number:
